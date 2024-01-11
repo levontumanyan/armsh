@@ -1,16 +1,8 @@
-#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-void armshloop();
-char* armsh_read_line();
-char* armsh_split_line(char* line);
-bool armsh_execute(char* args);
-
-int main(int argc, char **argv) {
-	armshloop();
-	return EXIT_SUCCESS;
-}
+#include "utils.h"
 
 // the shell during its loop should
 // read - read from std input
