@@ -121,3 +121,24 @@ int armsh_launch(char** args) {
 	}
 	return 1;
 }
+
+void armsh_loop(void) {
+	char *line;
+	char **args;
+	int status;
+
+	do {
+		printf("🇦🇲: ");
+		line = armsh_read_line();
+		args = armsh_split_line(line);
+		status = 1;
+		
+		// understand the below
+		for (int i = 0; args[i] != NULL; i++) {
+			printf("Token %d: %s\n", i + 1, args[i]);
+		}
+
+		free(line);
+		free(args);
+	} while (status);
+}
