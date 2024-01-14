@@ -1,10 +1,11 @@
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "utils.h"
+#include "builtins.h"
 
 #define NUM_TOKENS 1000
 // the shell during its loop should
@@ -97,46 +98,16 @@ char** armsh_split_line(char* line) {
 	return tokens;
 }
 
-int armsh_launch(char** args) {
-	pid_t pid, wpid;
-	int status;
-
-	pid = fork();
-	if (pid == 0) {
-		// Child process
-		if (execvp(args[0], args) == -1) {
-			perror("armsh");
-		}
-		exit(EXIT_FAILURE);
-	}
-	else if (pid < 0) {
-		// Error forking
-		perror("armsh");
-	}
-	else {
-		// Parent Process
-		do {
-			wpid = waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
-	}
-	return 1;
-}
-
 void armsh_loop(void) {
 	char *line;
 	char **args;
 	int status;
 
 	do {
-		printf("🇦🇲: ");
+		printf("🇦🇲");
 		line = armsh_read_line();
 		args = armsh_split_line(line);
-		status = 1;
-		
-		// understand the below
-		for (int i = 0; args[i] != NULL; i++) {
-			printf("Token %d: %s\n", i + 1, args[i]);
-		}
+		status = armsh_execute(args);
 
 		free(line);
 		free(args);
