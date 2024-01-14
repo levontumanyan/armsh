@@ -35,11 +35,16 @@ int armsh_cd (char **args) {
 }
 
 int armsh_help (char **args) {
+	printf("Armenian shell\n");
+	printf("Below are the builtins\n");
+	for (int i = 0; i < armsh_num_builtins(); i++) {
+		printf(" %s\n", builtins[i]);
+	}
 	return 1;
 }
 
 int armsh_exit (char **args) {
-	return 1;
+	return 0;
 }
 
 int armsh_launch(char** args) {
