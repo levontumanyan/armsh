@@ -72,7 +72,7 @@ char* armsh_read_line() {
 char** armsh_split_line(char* line) {
 	int num_tokens = NUM_TOKENS;
 	char** tokens = malloc(num_tokens * sizeof(char*));
-	char* token = strtok(line, " ");
+	char* token;
 	int token_count = 0;
 
 	if (!tokens) {
@@ -80,10 +80,11 @@ char** armsh_split_line(char* line) {
 		exit(EXIT_FAILURE);
 	}
 
+	token = strtok(line, " ");
+
 	while (token != NULL) {
 		tokens[token_count] = token;
 		token_count++;
-		token = strtok(NULL, " ");
 
 		if (token_count >= num_tokens) {
 			num_tokens *= 2;
@@ -93,8 +94,10 @@ char** armsh_split_line(char* line) {
 				exit(EXIT_FAILURE);
 			}
 		}
+		token = strtok(NULL, " ");
 	}
 
+	tokens[token_count] = NULL;
 	return tokens;
 }
 
