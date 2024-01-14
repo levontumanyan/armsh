@@ -104,7 +104,7 @@ void armsh_loop(void) {
 	int status;
 
 	do {
-		printf("🇦🇲");
+		printf("🇦🇲\u00A0\u00A0");
 		line = armsh_read_line();
 		args = armsh_split_line(line);
 		status = armsh_execute(args);
