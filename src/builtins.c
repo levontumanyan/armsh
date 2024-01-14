@@ -2,16 +2,19 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <errno.h>
+
 #include "builtins.h"
 
 // List of builtin commands, followed by their corresponding functions.
 
-char *builtins[] = { "cd", "help", "exit" };
+char *builtins[] = { "cd", "pwd", "help", "exit" };
 
 // Array of function pointers / array of pointers to functions
 
 int (*builtin_funcs[]) (char **) = {
 	&armsh_cd,
+	&armsh_pwd,
 	&armsh_help,
 	&armsh_exit
 };
@@ -34,10 +37,50 @@ int armsh_cd (char **args) {
 	return 1;
 }
 
+int armsh_pwd (char **args) {
+	if (args[1]) {
+		fprintf(stderr, "armsh: Too many arguments\n");
+		return 1;
+	}
+
+	long path_max;
+	size_t size;
+	char *buf;
+	char *cwd;
+
+	path_max = pathconf(".", _PC_PATH_MAX);
+	if (path_max == -1)
+		size = 1024;
+	else if (path_max > 10240)
+		size = 10240;
+	else
+		size = path_max;
+
+	for (buf = cwd = NULL; cwd == NULL; size *= 2) {
+		if ((buf = realloc(buf, size)) == NULL)
+		{
+			fprintf(stderr, "Error reallocating memory: %s\n", strerror(errno));
+        	exit(EXIT_FAILURE);
+		}
+
+		cwd = getcwd(buf, size);
+		if (cwd != NULL) {
+			printf("%s\n", cwd);
+		}
+		if (cwd == NULL && errno != ERANGE) {
+			fprintf(stderr, "Error getting current working directory: %s\n", strerror(errno));
+        	exit(EXIT_FAILURE);
+		}
+	}
+	free (buf);
+	return 1;
+}
+
 int armsh_help (char **args) {
 	printf("Armenian shell\n");
 	printf("Below are the builtins\n");
-	for (int i = 0; i < armsh_num_builtins(); i++) {
+	int builtins_count = armsh_num_builtins();
+	for (int i = 0; i < builtins_count; i++) {
 		printf(" %s\n", builtins[i]);
 	}
 	return 1;
