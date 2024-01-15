@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "utils.h"
 #include "builtins.h"
@@ -12,21 +13,6 @@
 // read - read from std input
 // parse - separate the command string into a program and arguments
 // execute - run the parsed command
-
-void armshloop() {
-	char *line;
-	char **args;
-	int status;
-	do {
-		printf("🇦🇲");
-		line = armsh_read_line();
-		args = armsh_split_line(line);
-		//status = armsh_execute(args);
-
-		free(line);
-		free(args);
-	} while (status);		
-}
 
 #define ARMSH_RL_BUFSIZE 1024
 
