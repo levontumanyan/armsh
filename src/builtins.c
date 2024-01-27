@@ -29,8 +29,10 @@ int armsh_echo (char **args) {
 	if (!args[1]) {
 		printf("\n");
 	}
-	else if (args[1] != NULL) {
-		printf("%s\n", args[1]);
+	int i = 1;
+	while (args[i] != NULL) {
+		printf("%s\n", args[i]);
+		i++;
 	}
 	return 1;
 }
