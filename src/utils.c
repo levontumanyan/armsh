@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <signal.h>
 
-#include "utils.h"
-#include "builtins.h"
+#include "../include/utils.h"
+#include "../include/builtins.h"
 
 #define NUM_TOKENS 1000
 // the shell during its loop should

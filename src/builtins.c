@@ -4,15 +4,16 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "builtins.h"
+#include "../include/builtins.h"
 
 // List of builtin commands, followed by their corresponding functions.
 
-char *builtins[] = { "cd", "pwd", "help", "exit" };
+char *builtins[] = { "echo", "cd", "pwd", "help", "exit" };
 
 // Array of function pointers / array of pointers to functions
 
 int (*builtin_funcs[]) (char **) = {
+	&armsh_echo,
 	&armsh_cd,
 	&armsh_pwd,
 	&armsh_help,
@@ -24,6 +25,15 @@ int armsh_num_builtins() {
 }
 
 // builtin functions implementation
+int armsh_echo (char **args) {
+	if (!args[1]) {
+		printf("\n");
+	}
+	else if (args[1] != NULL) {
+		printf("%s\n", args[1]);
+	}
+	return 1;
+}
 
 int armsh_cd (char **args) {
 	if (!args[1]) {
@@ -91,7 +101,7 @@ int armsh_exit (char **args) {
 }
 
 int armsh_launch(char** args) {
-	pid_t pid, wpid;
+	pid_t pid;
 	int status;
 
 	pid = fork();
@@ -109,7 +119,7 @@ int armsh_launch(char** args) {
 	else {
 		// Parent Process
 		do {
-			wpid = waitpid(pid, &status, WUNTRACED);
+			waitpid(pid, &status, WUNTRACED);
 		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
 	return 1;
